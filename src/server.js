@@ -41,7 +41,11 @@ export const setupServer = () => {
           .send({ status: 404, message: 'Contact not found' });
       }
 
-      res.send({ status: 200, data: contact });
+      res.send({
+        status: 200,
+        message: `Successfully found contact with id ${id}!`,
+        data: contact,
+      });
     } catch (error) {
       console.log(error);
       res.status(500).send({ status: 500, message: 'Internal server error' });
