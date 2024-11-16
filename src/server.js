@@ -32,24 +32,30 @@ export const setupServer = () => {
   app.get('/contacts/:id', async (req, res) => {
     const { id } = req.params;
 
-    const contact = await Contact.findById(id);
+    try {
+      const contact = await Contact.findById(id);
 
-    if (contact === null) {
-      return res
-        .status(404)
-        .send({ status: 404, message: 'Contact not found' });
+      if (contact === null) {
+        return res
+          .status(404)
+          .send({ status: 404, message: 'Contact not found' });
+      }
+
+      res.send({ status: 200, data: contact });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ status: 500, message: 'Internal server error' });
     }
-
-    res.send({ status: 200, data: contact });
   });
 
   app.use((req, res, next) => {
     res.status(404).json({ message: 'Not found' });
   });
 
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  app.use((error, req, res, next) => {
+    console.error(error);
+    res.status(500).send({ status: 500, message: 'Internal server error' });
   });
+
   return app;
 };
