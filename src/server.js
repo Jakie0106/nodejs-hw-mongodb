@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino';
 import contactsRouter from './routers/contacts.js';
+import errorHandler from './middlewares/errorHandler.js';
+import notFoundHandler from './middlewares/notFoundHandler.js';
 
 export const setupServer = () => {
   const app = express();
@@ -17,14 +19,9 @@ export const setupServer = () => {
     next();
   });
 
-  app.use((req, res, next) => {
-    res.status(404).json({ message: 'Not found' });
-  });
+  app.use(errorHandler);
 
-  app.use((error, req, res, next) => {
-    console.error(error);
-    res.status(500).send({ status: 500, message: 'Internal server error' });
-  });
+  app.use(notFoundHandler);
 
   return app;
 };
