@@ -20,9 +20,9 @@ export const setupServer = () => {
     next();
   });
 
-  app.use(errorHandler);
-
   app.use(notFoundHandler);
+
+  app.use(errorHandler);
 
   return app;
 };

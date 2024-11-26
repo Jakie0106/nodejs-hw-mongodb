@@ -1,8 +1,11 @@
 const errorHandler = (err, req, res, next) => {
+  const status = err.status || 500;
+  const message = err.message || 'Something went wrong';
+
   res.status(500).send({
-    status: 500,
-    message: 'Something went wrong',
-    data: err.message,
+    status,
+    message,
+    data: status === 500 ? 'Internal Server Error' : err.message,
   });
 };
 
