@@ -8,11 +8,32 @@ import {
 
 export const getAllContacts = async (req, res, next) => {
   try {
-    const contacts = await Contact.find();
+    const {
+      page = 1,
+      perPage = 10,
+      sortBy = 'name',
+      sortOrder = 'asc',
+    } = req.query;
+
+    const options = {
+      page: parseInt(page, 10),
+      limit: parseInt(perPage, 10),
+      sort: { [sortBy]: sortOrder === 'asc' ? 1 : -1 },
+    };
+
+    const contacts = await Contact.paginate({}, options);
     res.status(200).send({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts,
+      data: {
+        data: contacts.docs,
+        page: contacts.page,
+        perPage: contacts.limit,
+        totalItems: contacts.totalDocs,
+        totalPages: contacts.totalPages,
+        hasPreviousPage: contacts.hasPrevPage,
+        hasNextPage: contacts.hasNextPage,
+      },
     });
   } catch (error) {
     next(error);
