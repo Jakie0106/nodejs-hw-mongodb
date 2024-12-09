@@ -4,8 +4,12 @@ export const createNewContact = async (contactData) => {
   return Contact.create(contactData);
 };
 
+export const getContactById = async (id, userId) => {
+  return Contact.findOne({ _id: id, userId });
+};
+
 export const updateContact = async (id, updateData, userId) => {
-  const updateContact = await Contact.findByIdAndUpdate(
+  const updateContact = await Contact.findOneAndUpdate(
     { _id: id, userId },
     updateData,
     { new: true },
@@ -14,6 +18,6 @@ export const updateContact = async (id, updateData, userId) => {
 };
 
 export const deleteContact = async (id, userId) => {
-  const contact = await Contact.findByIdAndDelete({ _id: id, userId });
+  const contact = await Contact.findOneAndDelete({ _id: id, userId });
   return contact;
 };
