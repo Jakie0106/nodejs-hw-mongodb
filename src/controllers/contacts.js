@@ -1,6 +1,11 @@
 import Contact from '../models/contact.js';
 import createHttpError from 'http-errors';
-import { createNewContact } from '../services/contacts.js';
+import {
+  createNewContact,
+  deleteContact,
+  getContactById,
+  updateContact,
+} from '../services/contacts.js';
 
 export const getAllContacts = async (req, res, next) => {
   try {
@@ -36,10 +41,10 @@ export const getAllContacts = async (req, res, next) => {
   }
 };
 
-export const getContactById = async (req, res, next) => {
+export const getContactByIdController = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const contact = await Contact.findOne({ _id: id, userId: req.user._id });
+    const contact = await getContactById(id, req.user._id);
     if (!contact) {
       throw createHttpError(404, 'Contact not found');
     }
@@ -77,11 +82,7 @@ export const createContactController = async (req, res, next) => {
 export const updateContactController = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const updatedContact = await Contact.findOneAndUpdate(
-      { _id: id, userId: req.user._id },
-      req.body,
-      { new: true },
-    );
+    const updatedContact = await updateContact(id, req.body, req.user._id);
     if (!updatedContact) {
       throw createHttpError(404, 'Contact not found');
     }
@@ -99,10 +100,7 @@ export const updateContactController = async (req, res, next) => {
 export const deleteContactController = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const contact = await Contact.findOneAndDelete({
-      _id: id,
-      userId: req.user._id,
-    });
+    const contact = await deleteContact(id, req.user._id);
     if (!contact) {
       throw createHttpError(404, 'Contact not found');
     }
