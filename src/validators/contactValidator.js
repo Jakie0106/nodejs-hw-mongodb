@@ -1,40 +1,80 @@
 import { checkSchema } from 'express-validator';
 
-export const contactSchema = checkSchema({
+export const createContactSchema = checkSchema({
   name: {
-    isString: true,
-    trim: true,
     isLength: {
       options: { min: 3, max: 20 },
+      errorMessage: 'Name should be between 3 and 20 characters',
     },
-    errorMessage: 'Name should be between 3 and 20 characters',
+    notEmpty: true,
+    errorMessage: 'Name is required',
   },
   phoneNumber: {
-    isString: true,
-    trim: true,
     isLength: {
       options: { min: 3, max: 20 },
+      errorMessage: 'Phone number should be between 3 and 20 characters',
     },
-    errorMessage: 'Phone number should be between 3 and 20 characters',
+    notEmpty: true,
+    errorMessage: 'Phone number is required',
+  },
+  email: {
+    isEmail: true,
+    normalizeEmail: true,
+    errorMessage: 'Invalid email address',
+  },
+  isFavourite: {
+    isBoolean: true,
+    errorMessage: 'isFavourite should be a boolean value',
+  },
+  contactType: {
+    isIn: {
+      options: [['personal', 'business']],
+      errorMessage: 'Invalid contact type',
+    },
+  },
+  photo: {
+    optional: true,
+    isString: true,
+    errorMessage: 'Photo should be a string URL',
+  },
+});
+
+export const updateContactSchema = checkSchema({
+  name: {
+    optional: true,
+    isLength: {
+      options: { min: 3, max: 20 },
+      errorMessage: 'Name should be between 3 and 20 characters',
+    },
+  },
+  phoneNumber: {
+    optional: true,
+    isLength: {
+      options: { min: 3, max: 20 },
+      errorMessage: 'Phone number should be between 3 and 20 characters',
+    },
   },
   email: {
     optional: true,
     isEmail: true,
     normalizeEmail: true,
-    errorMessage: 'Invalid email',
+    errorMessage: 'Invalid email address',
   },
   isFavourite: {
     optional: true,
     isBoolean: true,
-    toBoolean: true,
-    errorMessage: 'Invalid value for isFavourite',
+    errorMessage: 'isFavourite should be a boolean value',
   },
   contactType: {
-    isString: true,
-    trim: true,
+    optional: true,
     isIn: {
-      options: [['work', 'home', 'personal']],
+      options: [['personal', 'business']],
+      errorMessage: 'Invalid contact type',
     },
-    errorMessage: 'Invalid contact type',
+  },
+  photo: {
+    optional: true,
+    isString: true,
+    errorMessage: 'Photo should be a string URL',
   },
 });
