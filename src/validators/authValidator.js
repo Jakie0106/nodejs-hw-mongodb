@@ -31,3 +31,25 @@ export const loginSchema = checkSchema({
     errorMessage: 'Password is required',
   },
 });
+
+export const emailSchema = checkSchema({
+  email: {
+    isEmail: true,
+    normalizeEmail: true,
+    errorMessage: 'Invalid email address',
+  },
+});
+export const resetPasswordSchema = checkSchema({
+  token: {
+    in: ['body'],
+    isString: true,
+    errorMessage: 'Invalid token',
+  },
+  password: {
+    in: ['body'],
+    isLength: {
+      options: { min: 6 },
+      errorMessage: 'Password must be at least 6 characters long',
+    },
+  },
+});
