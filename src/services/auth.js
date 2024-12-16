@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import bcrypt from 'bcrypt';
 import createError from 'http-errors';
 import User from '../models/user.js';

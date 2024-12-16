@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import {

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import cloudinary from 'cloudinary';
 // import fs from 'fs/promises';
 

@@ -32,11 +32,6 @@ export const createContactSchema = checkSchema({
       errorMessage: 'Invalid contact type',
     },
   },
-  photo: {
-    optional: true,
-    isString: true,
-    errorMessage: 'Photo should be a string URL',
-  },
 });
 
 export const updateContactSchema = checkSchema({
