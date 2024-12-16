@@ -1,5 +1,5 @@
-import { upload } from '../middlewares/multer.js';
 import express from 'express';
+// import { upload } from '../middlewares/multer.js';
 import {
   getAllContacts,
   getContactByIdController,
@@ -15,6 +15,7 @@ import {
   createContactSchema,
   updateContactSchema,
 } from '../validators/contactValidator.js';
+import { upload } from '../middlewares/multer.js';
 
 const router = express.Router();
 const parser = express.json();

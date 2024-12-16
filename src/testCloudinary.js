@@ -1,7 +1,9 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import cloudinary from 'cloudinary';
 
-process.env.ENABLE_CLOUDINARY = true;
+// Явно указываем путь к файлу .env
+dotenv.config({ path: '../.env' });
+
 console.log('ENABLE_CLOUDINARY:', process.env.ENABLE_CLOUDINARY);
 console.log('CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME);
 console.log('CLOUDINARY_API_KEY:', process.env.CLOUDINARY_API_KEY);
