@@ -8,6 +8,13 @@ import notFoundHandler from './middlewares/notFoundHandler.js';
 import authRouter from './routers/auth.js';
 import cookieParser from 'cookie-parser';
 import { UPLOAD_DIR } from './constants/index.js';
+import path from 'node:path';
+import fs from 'node:fs';
+
+const TMP_DIR = path.resolve('src', 'tmp');
+if (!fs.existsSync(TMP_DIR)) {
+  fs.mkdirSync(TMP_DIR, { recursive: true });
+}
 
 export const setupServer = () => {
   const app = express();
