@@ -14,7 +14,7 @@ import {
   createContactSchema,
   updateContactSchema,
 } from '../validators/contactValidator.js';
-import { upload } from '../services/cloudinary.js';
+import { upload } from '../middlewares/multer.js';
 
 const router = express.Router();
 

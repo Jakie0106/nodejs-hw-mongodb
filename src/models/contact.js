@@ -32,7 +32,6 @@ const contactSchema = new mongoose.Schema(
     },
     photo: {
       type: String,
-      default: null,
     },
   },
   { timestamps: true, versionKey: false },
