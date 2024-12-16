@@ -1,4 +1,3 @@
-// validateId.js
 import mongoose from 'mongoose';
 
 const id = '67463aaccc4b62f3aa015f53';

@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import cloudinary from 'cloudinary';
 
-console.log('ENABLE_CLOUDINARY:', process.env.SMTP_HOST);
+process.env.ENABLE_CLOUDINARY = true;
+console.log('ENABLE_CLOUDINARY:', process.env.ENABLE_CLOUDINARY);
 console.log('CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME);
 console.log('CLOUDINARY_API_KEY:', process.env.CLOUDINARY_API_KEY);
 console.log('CLOUDINARY_API_SECRET:', process.env.CLOUDINARY_API_SECRET);
@@ -20,9 +21,7 @@ if (process.env.ENABLE_CLOUDINARY === 'true') {
     try {
       const result = await cloudinary.v2.uploader.upload(
         'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg',
-        {
-          public_id: 'test_image',
-        },
+        { public_id: 'test_image', secure: true },
       );
 
       console.log('Cloudinary upload result:', result);

@@ -7,6 +7,8 @@ import {
   updateContact,
 } from '../services/contacts.js';
 import { upload, uploadToCloudinary } from '../services/cloudinary.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+// import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllContacts = async (req, res, next) => {
   try {
@@ -62,7 +64,10 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactController = async (req, res, next) => {
   upload.single('photo')(req, res, async (err) => {
     if (err) {
-      return next(createHttpError(500, 'Failed to upload photo'));
+      console.error('Error in multer upload:', err);
+      return next(
+        createHttpError(500, 'Failed to upload photo', { data: err.message }),
+      );
     }
     try {
       const { name, phoneNumber, email, isFavourite, contactType } = req.body;
@@ -72,8 +77,13 @@ export const createContactController = async (req, res, next) => {
       let photo = null;
 
       if (req.file) {
-        photo = await uploadToCloudinary(req.file.buffer);
+        if (process.env.ENABLE_CLOUDINARY === 'true') {
+          photo = await uploadToCloudinary(req.file.path);
+        } else {
+          photo = await saveFileToUploadDir(req.file);
+        }
       }
+
       const newContact = await createNewContact({
         name,
         phoneNumber,
@@ -92,6 +102,7 @@ export const createContactController = async (req, res, next) => {
         data: newContact,
       });
     } catch (error) {
+      console.error('Error creating contact:', error);
       next(error);
     }
   });
@@ -105,13 +116,21 @@ export const updateContactController = async (req, res, next) => {
     const { id } = req.params;
     try {
       const updateData = req.body;
+
       if (req.file) {
-        updateData.photo = await uploadToCloudinary(req.file.buffer);
+        if (process.env.ENABLE_CLOUDINARY === 'true') {
+          updateData.photo = await uploadToCloudinary(req.file.path);
+        } else {
+          updateData.photo = await saveFileToUploadDir(req.file);
+        }
       }
+
       const updatedContact = await updateContact(id, updateData, req.user._id);
+
       if (!updatedContact) {
         throw createHttpError(404, 'Contact not found');
       }
+
       res.status(200).json({
         status: 200,
         message: 'Successfully patched a contact!',
