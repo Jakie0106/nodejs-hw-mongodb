@@ -1,3 +1,4 @@
+import * as fs from 'node:fs/promises';
 import Contact from '../models/contact.js';
 import createHttpError from 'http-errors';
 import {
@@ -6,8 +7,9 @@ import {
   getContactById,
   updateContact,
 } from '../services/contacts.js';
-import { upload, uploadToCloudinary } from '../services/cloudinary.js';
-import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { upload } from '../middlewares/multer.js';
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
+import path from 'node:path';
 // import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllContacts = async (req, res, next) => {
@@ -70,28 +72,30 @@ export const createContactController = async (req, res, next) => {
       );
     }
     try {
-      const { name, phoneNumber, email, isFavourite, contactType } = req.body;
-      console.log('Request body:', req.body);
-      console.log('File info:', req.file);
-
       let photo = null;
 
-      if (req.file) {
+      if (typeof req.file !== 'undefined') {
         if (process.env.ENABLE_CLOUDINARY === 'true') {
-          photo = await uploadToCloudinary(req.file.path);
+          const result = await uploadToCloudinary(req.file.path);
+          await fs.unlink(req.file.path);
+          photo = result.secure_url;
         } else {
-          photo = await saveFileToUploadDir(req.file);
+          await fs.rename(
+            req.file.path,
+            path.resolve('src', 'public', 'photo', req.file.filename),
+          );
+          photo = `http://localhost:3000/photo/${req.file.filename}`;
         }
       }
 
       const newContact = await createNewContact({
-        name,
-        phoneNumber,
-        email,
-        isFavourite,
-        contactType,
-        photo,
+        name: req.body.name,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        isFavourite: req.body.isFavourite,
+        contactType: req.body.contactType,
         userId: req.user._id,
+        photo,
       });
 
       await newContact.save();
@@ -115,22 +119,26 @@ export const updateContactController = async (req, res, next) => {
     }
     const { id } = req.params;
     try {
+      let photo = null;
       const updateData = req.body;
-
-      if (req.file) {
+      if (typeof req.file !== 'undefined') {
         if (process.env.ENABLE_CLOUDINARY === 'true') {
-          updateData.photo = await uploadToCloudinary(req.file.path);
+          const result = await uploadToCloudinary(req.file.path);
+          await fs.unlink(req.file.path);
+          photo = result.secure_url;
         } else {
-          updateData.photo = await saveFileToUploadDir(req.file);
+          await fs.rename(
+            req.file.path,
+            path.resolve('src', 'public', 'photo', req.file.filename),
+          );
+          photo = `http://localhost:3000/photo/${req.file.filename}`;
         }
+        updateData.photo = photo;
       }
-
       const updatedContact = await updateContact(id, updateData, req.user._id);
-
       if (!updatedContact) {
         throw createHttpError(404, 'Contact not found');
       }
-
       res.status(200).json({
         status: 200,
         message: 'Successfully patched a contact!',
