@@ -11,7 +11,6 @@ import {
 
 import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
 import path from 'node:path';
-// import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllContacts = async (req, res, next) => {
   try {
@@ -122,7 +121,7 @@ export const updateContactController = async (req, res, next) => {
       } else {
         await fs.rename(
           req.file.path,
-          path.resolve('src', 'public', 'photo', req.file.filename),
+          path.resolve('src', 'tmp', req.file.filename),
         );
         photo = `http://localhost:3000/photo/${req.file.filename}`;
       }
