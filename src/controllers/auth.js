@@ -83,7 +83,7 @@ export const sendResetEmailController = async (req, res, next) => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: '5m',
     });
-    await sendResetEmail(email, token);
+    await sendResetEmail(email, user.name, token);
     res.status(200).json({
       status: 200,
       message: 'Reset password email has been successfully sent.',

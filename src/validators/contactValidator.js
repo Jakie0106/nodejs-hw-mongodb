@@ -28,7 +28,7 @@ export const createContactSchema = checkSchema({
   },
   contactType: {
     isIn: {
-      options: [['personal', 'business']],
+      options: [['personal', 'business', 'work', 'home', 'emergency', 'other']],
       errorMessage: 'Invalid contact type',
     },
   },
@@ -63,7 +63,7 @@ export const updateContactSchema = checkSchema({
   contactType: {
     optional: true,
     isIn: {
-      options: [['personal', 'business']],
+      options: [['personal', 'business', 'work', 'home', 'emergency', 'other']],
       errorMessage: 'Invalid contact type',
     },
   },
