@@ -18,11 +18,13 @@ export const createContactSchema = checkSchema({
     errorMessage: 'Phone number is required',
   },
   email: {
+    optional: true,
     isEmail: true,
     normalizeEmail: true,
     errorMessage: 'Invalid email address',
   },
   isFavourite: {
+    optional: true,
     isBoolean: true,
     errorMessage: 'isFavourite should be a boolean value',
   },
