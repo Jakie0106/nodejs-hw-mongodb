@@ -1,0 +1,30 @@
+openapi: 3.0.0
+info:
+  title: Node.js HW MongoDB API
+  description: API documentation for Node.js HW MongoDB application
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080
+    description: Local server
+paths:
+  /contacts/{contactId}:
+    get:
+      $ref: '../swagger/paths/contacts/{id}/get.yaml'
+    patch:
+      $ref: '../swagger/paths/contacts/{id}/patch.yaml'
+    delete:
+      $ref: '../swagger/paths/contacts/{id}/delete.yaml'
+  /contacts:
+    get:
+      $ref: '../swagger/paths/contacts/get.yaml'
+    post:
+      $ref: '../swagger/paths/contacts/post.yaml'
+components:
+  schemas:
+    contact:
+      $ref: '../swagger/components/schemas/contact.yaml'
+  responses:
+    Unauthorized:
+      $ref: '../swagger/components/responses/401.yaml'
+    InternalServerError:
+      $ref: '../swagger/components/responses/500.yaml'
