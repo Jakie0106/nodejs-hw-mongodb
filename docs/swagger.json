@@ -7,12 +7,19 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
-      "description": "Local server"
+      "url": "http://localhost:3000"
+    },
+    {
+      "url": "https://nodejs-hw-mongodb-tepk.onrender.com"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
     }
   ],
   "paths": {
-    "/contacts/{contactId}": {
+    "/contacts/{id}": {
       "get": {
         "tags": [
           "Contacts"
@@ -28,11 +35,11 @@
         "parameters": [
           {
             "in": "path",
-            "name": "contactId",
+            "name": "id",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "676462ff85dc040abeb5c824"
+              "example": "67606dde93cea8ebd7d245ba"
             }
           }
         ],
@@ -108,7 +115,7 @@
         ],
         "summary": "Update contact by id",
         "operationId": "updateContact",
-        "description": "Update contact by id",
+        "description": "Update contact by id with photo upload",
         "security": [
           {
             "bearerAuth": []
@@ -117,14 +124,62 @@
         "parameters": [
           {
             "in": "path",
-            "name": "contactId",
+            "name": "id",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "676462ff85dc040abeb5c824"
+              "example": "67606dde93cea8ebd7d245ba"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the contact",
+                    "example": "John Doe"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number of the contact",
+                    "example": "+1-234-567-8900"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email address of the contact",
+                    "example": "johndoe@example.com",
+                    "nullable": true
+                  },
+                  "isFavourite": {
+                    "type": "boolean",
+                    "description": "Indicates if the contact is marked as favorite",
+                    "example": false
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "description": "Type of contact",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "example": "personal"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File upload for the contact's photo"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Contact updated successfully",
@@ -235,16 +290,16 @@
         "parameters": [
           {
             "in": "path",
-            "name": "contactId",
+            "name": "id",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "676462ff85dc040abeb5c824"
+              "example": "67606dde93cea8ebd7d245ba"
             }
           }
         ],
         "responses": {
-          "200": {
+          "204": {
             "description": "Contact deleted successfully",
             "content": {
               "application/json": {
@@ -387,7 +442,7 @@
         ],
         "summary": "Create new contact",
         "operationId": "createContact",
-        "description": "Create a new contact",
+        "description": "Create a new contact with photo upload",
         "security": [
           {
             "bearerAuth": []
@@ -396,9 +451,59 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/contact"
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumber",
+                  "contactType",
+                  "userId",
+                  "photo"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the contact",
+                    "example": "John Doe"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number of the contact",
+                    "example": "+1-234-567-8900"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email address of the contact",
+                    "example": "johndoe@example.com",
+                    "nullable": true
+                  },
+                  "isFavourite": {
+                    "type": "boolean",
+                    "description": "Indicates if the contact is marked as favorite",
+                    "example": false
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "description": "Type of contact",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "example": "personal"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "ID of the user associated with the contact",
+                    "example": "676462ff85dc040abeb5c824"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File upload for the contact's photo"
+                  }
+                }
               }
             }
           }
@@ -472,14 +577,20 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "contact": {
         "type": "object",
         "required": [
           "name",
           "phoneNumber",
-          "contactType",
-          "userId"
+          "contactType"
         ],
         "properties": {
           "name": {
@@ -520,8 +631,8 @@
           },
           "photo": {
             "type": "string",
-            "description": "URL of the contact's photo",
-            "example": "https://example.com/photo.jpg"
+            "format": "binary",
+            "description": "File upload for the contact's photo"
           },
           "createdAt": {
             "type": "string",

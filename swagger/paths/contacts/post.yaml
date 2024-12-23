@@ -2,15 +2,55 @@ tags:
   - Contacts
 summary: Create new contact
 operationId: createContact
-description: Create a new contact
+description: Create a new contact with photo upload
 security:
   - bearerAuth: []
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
-        $ref: '../../components/schemas/contact.yaml'
+        type: object
+        required:
+          - name
+          - phoneNumber
+          - contactType
+          - userId
+          - photo
+        properties:
+          name:
+            type: string
+            description: Name of the contact
+            example: John Doe
+          phoneNumber:
+            type: string
+            description: Phone number of the contact
+            example: +1-234-567-8900
+          email:
+            type: string
+            description: Email address of the contact
+            example: johndoe@example.com
+            nullable: true
+          isFavourite:
+            type: boolean
+            description: Indicates if the contact is marked as favorite
+            example: false
+          contactType:
+            type: string
+            description: Type of contact
+            enum:
+              - work
+              - home
+              - personal
+            example: personal
+          userId:
+            type: string
+            description: ID of the user associated with the contact
+            example: 676462ff85dc040abeb5c824
+          photo:
+            type: string
+            format: binary
+            description: File upload for the contact's photo
 responses:
   '201':
     description: Contact created successfully

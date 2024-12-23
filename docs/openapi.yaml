@@ -4,10 +4,26 @@ info:
   description: API documentation for Node.js HW MongoDB application
   version: 1.0.0
 servers:
-  - url: http://127.0.0.1:8080
-    description: Local server
+  - url: http://localhost:3000
+  - url: https://nodejs-hw-mongodb-tepk.onrender.com
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    contact:
+      $ref: '../swagger/components/schemas/contact.yaml'
+  responses:
+    Unauthorized:
+      $ref: '../swagger/components/responses/401.yaml'
+    InternalServerError:
+      $ref: '../swagger/components/responses/500.yaml'
+security:
+  - bearerAuth: []
 paths:
-  /contacts/{contactId}:
+  /contacts/{id}:
     get:
       $ref: '../swagger/paths/contacts/{id}/get.yaml'
     patch:
@@ -19,12 +35,3 @@ paths:
       $ref: '../swagger/paths/contacts/get.yaml'
     post:
       $ref: '../swagger/paths/contacts/post.yaml'
-components:
-  schemas:
-    contact:
-      $ref: '../swagger/components/schemas/contact.yaml'
-  responses:
-    Unauthorized:
-      $ref: '../swagger/components/responses/401.yaml'
-    InternalServerError:
-      $ref: '../swagger/components/responses/500.yaml'
