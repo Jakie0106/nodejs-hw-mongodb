@@ -7,11 +7,11 @@ security:
   - bearerAuth: []
 parameters:
   - in: path
-    name: contactId
+    name: id
     required: true
     schema:
       type: string
-      example: 676462ff85dc040abeb5c824
+      example: 67606dde93cea8ebd7d245ba
 responses:
   '200':
     description: Contact retrieved successfully

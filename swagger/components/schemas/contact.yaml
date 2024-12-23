@@ -3,7 +3,7 @@ required:
   - name
   - phoneNumber
   - contactType
-  - userId
+
 properties:
   name:
     type: string
@@ -36,8 +36,8 @@ properties:
     example: 676462ff85dc040abeb5c824
   photo:
     type: string
-    description: URL of the contact's photo
-    example: https://example.com/photo.jpg
+    format: binary
+    description: File upload for the contact's photo
   createdAt:
     type: string
     format: date-time
