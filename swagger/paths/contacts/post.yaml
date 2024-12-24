@@ -15,8 +15,7 @@ requestBody:
           - name
           - phoneNumber
           - contactType
-          - userId
-          - photo
+          - email
         properties:
           name:
             type: string
@@ -43,10 +42,6 @@ requestBody:
               - home
               - personal
             example: personal
-          userId:
-            type: string
-            description: ID of the user associated with the contact
-            example: 676462ff85dc040abeb5c824
           photo:
             type: string
             format: binary

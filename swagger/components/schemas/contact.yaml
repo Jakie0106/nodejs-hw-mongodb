@@ -3,8 +3,12 @@ required:
   - name
   - phoneNumber
   - contactType
-
+  - userId
 properties:
+  _id:
+    type: string
+    description: ID of the contact
+    example: 67695006626ceb61f08af4a7
   name:
     type: string
     description: Name of the contact
@@ -12,7 +16,7 @@ properties:
   phoneNumber:
     type: string
     description: Phone number of the contact
-    example: +1-234-567-8900
+    example: 234-567-8900
   email:
     type: string
     description: Email address of the contact
@@ -33,7 +37,7 @@ properties:
   userId:
     type: string
     description: ID of the user associated with the contact
-    example: 676462ff85dc040abeb5c824
+    example: 675ebf671269520b8ed9aaa2
   photo:
     type: string
     format: binary

@@ -2,24 +2,36 @@ tags:
   - Contacts
 summary: Get list of contacts
 operationId: getContacts
-description: Retrieve a list of contacts
+description: Retrieve a list of contacts with pagination and search options
 security:
   - bearerAuth: []
 parameters:
   - in: query
-    name: limit
+    name: page
+    required: false
+    schema:
+      type: integer
+      example: 1
+    description: The page number to return
+  - in: query
+    name: perPage
     required: false
     schema:
       type: integer
       example: 10
-    description: The number of contacts to return
+    description: The number of contacts per page
   - in: query
-    name: offset
-    required: false
+    name: sortOrder
     schema:
-      type: integer
-      example: 0
-    description: The number of contacts to skip
+      type: string
+      enum: ['asc', 'desc']
+      example: 'asc'
+  - in: query
+    name: sortBy
+    schema:
+      type: string
+      example: 'name'
+    description: 'Sort contacts by:'
 responses:
   '200':
     description: List of contacts retrieved successfully
@@ -31,6 +43,12 @@ responses:
             - status
             - message
             - data
+            - page
+            - perPage
+            - totalItems
+            - totalPages
+            - hasPreviousPage
+            - hasNextPage
           properties:
             status:
               type: integer
@@ -42,6 +60,44 @@ responses:
               type: array
               items:
                 $ref: '../../components/schemas/contact.yaml'
+            page:
+              type: integer
+              example: 1
+            perPage:
+              type: integer
+              example: 10
+            totalItems:
+              type: integer
+              example: 13
+            totalPages:
+              type: integer
+              example: 2
+            hasPreviousPage:
+              type: boolean
+              example: false
+            hasNextPage:
+              type: boolean
+              example: true
+  '400':
+    description: Bad request
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: Invalid request
+            data:
+              type: object
+              example: {}
   '401':
     $ref: '../../components/responses/401.yaml'
   '500':

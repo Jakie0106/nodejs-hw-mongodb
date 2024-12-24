@@ -312,7 +312,7 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 200
+                      "example": 204
                     },
                     "message": {
                       "type": "string",
@@ -368,7 +368,7 @@
         ],
         "summary": "Get list of contacts",
         "operationId": "getContacts",
-        "description": "Retrieve a list of contacts",
+        "description": "Retrieve a list of contacts with pagination and search options",
         "security": [
           {
             "bearerAuth": []
@@ -377,23 +377,44 @@
         "parameters": [
           {
             "in": "query",
-            "name": "limit",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "The page number to return"
+          },
+          {
+            "in": "query",
+            "name": "perPage",
             "required": false,
             "schema": {
               "type": "integer",
               "example": 10
             },
-            "description": "The number of contacts to return"
+            "description": "The number of contacts per page"
           },
           {
             "in": "query",
-            "name": "offset",
-            "required": false,
+            "name": "sortOrder",
             "schema": {
-              "type": "integer",
-              "example": 0
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "example": "asc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "name"
             },
-            "description": "The number of contacts to skip"
+            "description": "All student's fields can be mentioned. Default value - _id"
           }
         ],
         "responses": {
@@ -406,7 +427,13 @@
                   "required": [
                     "status",
                     "message",
-                    "data"
+                    "data",
+                    "page",
+                    "perPage",
+                    "totalItems",
+                    "totalPages",
+                    "hasPreviousPage",
+                    "hasNextPage"
                   ],
                   "properties": {
                     "status": {
@@ -422,6 +449,59 @@
                       "items": {
                         "$ref": "#/components/schemas/contact"
                       }
+                    },
+                    "page": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "perPage": {
+                      "type": "integer",
+                      "example": 10
+                    },
+                    "totalItems": {
+                      "type": "integer",
+                      "example": 13
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "hasPreviousPage": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "hasNextPage": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
                     }
                   }
                 }
@@ -458,8 +538,7 @@
                   "name",
                   "phoneNumber",
                   "contactType",
-                  "userId",
-                  "photo"
+                  "email"
                 ],
                 "properties": {
                   "name": {
@@ -492,11 +571,6 @@
                       "personal"
                     ],
                     "example": "personal"
-                  },
-                  "userId": {
-                    "type": "string",
-                    "description": "ID of the user associated with the contact",
-                    "example": "676462ff85dc040abeb5c824"
                   },
                   "photo": {
                     "type": "string",
@@ -590,9 +664,15 @@
         "required": [
           "name",
           "phoneNumber",
-          "contactType"
+          "contactType",
+          "userId"
         ],
         "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID of the contact",
+            "example": "67695006626ceb61f08af4a7"
+          },
           "name": {
             "type": "string",
             "description": "Name of the contact",
@@ -601,7 +681,7 @@
           "phoneNumber": {
             "type": "string",
             "description": "Phone number of the contact",
-            "example": "+1-234-567-8900"
+            "example": "234-567-8900"
           },
           "email": {
             "type": "string",
@@ -627,7 +707,7 @@
           "userId": {
             "type": "string",
             "description": "ID of the user associated with the contact",
-            "example": "676462ff85dc040abeb5c824"
+            "example": "675ebf671269520b8ed9aaa2"
           },
           "photo": {
             "type": "string",
