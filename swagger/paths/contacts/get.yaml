@@ -78,26 +78,6 @@ responses:
             hasNextPage:
               type: boolean
               example: true
-  '400':
-    description: Bad request
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 400
-            message:
-              type: string
-              example: Invalid request
-            data:
-              type: object
-              example: {}
   '401':
     $ref: '../../components/responses/401.yaml'
   '500':
