@@ -414,7 +414,7 @@
               "type": "string",
               "example": "name"
             },
-            "description": "All student's fields can be mentioned. Default value - _id"
+            "description": "Sort contacts by:"
           }
         ],
         "responses": {
