@@ -15,7 +15,6 @@ requestBody:
           - name
           - phoneNumber
           - contactType
-          - email
         properties:
           name:
             type: string
